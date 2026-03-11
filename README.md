@@ -21,10 +21,11 @@
 ## Applicatie starten
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File "C:\Users\loek\engie-mock\java-api\run.ps1"
+cd java-api
+powershell -ExecutionPolicy Bypass -File ".\run.ps1"
 ```
 
-De eerste keer downloadt het script Maven automatisch. Daarna start de applicatie op:
+De eerste keer downloadt het script Maven automatisch naar `~\.m2\`. Daarna start de applicatie op:
 
 ```
 http://localhost:8080
@@ -35,9 +36,8 @@ http://localhost:8080
 ## Testen uitvoeren
 
 ```powershell
-$MVN = "C:\Users\loek\.m2\wrapper\dists\apache-maven-3.9.6\apache-maven-3.9.6\bin\mvn.cmd"
-cd C:\Users\loek\engie-mock\java-api
-& $MVN test
+cd java-api
+powershell -ExecutionPolicy Bypass -File ".\test.ps1"
 ```
 
 Verwacht resultaat:
