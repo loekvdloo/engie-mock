@@ -1,0 +1,161 @@
+{
+  "info": {
+    "name": "Engie Bericht API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "✅ 1. Geldig bericht (GOEDGEKEURD → 202)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/berichten", "host": ["localhost"], "port": "8080", "path": ["api", "berichten"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"senderID\":     \"871686700000900000\",\n  \"receiverID\":   \"871686700001600000\",\n  \"contentType\":  \"AllocationResult\",\n  \"correlationId\": \"MSG-20260311-001\",\n  \"xmlPayload\":   \"<AllocationResult><mRID>MSG-20260311-001</mRID><processType>A01</processType><measurementUnit>KWH</measurementUnit></AllocationResult>\"\n}"
+        }
+      }
+    },
+    {
+      "name": "⚠️ 2. Lege XML payload (XML-001 TECHNISCH → 202)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/berichten", "host": ["localhost"], "port": "8080", "path": ["api", "berichten"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"senderID\":     \"871686700000900000\",\n  \"receiverID\":   \"871686700001600000\",\n  \"contentType\":  \"AllocationResult\",\n  \"correlationId\": \"MSG-20260311-002\",\n  \"xmlPayload\":   \"\"\n}"
+        }
+      }
+    },
+    {
+      "name": "⚠️ 3. Ongeldige XML (XML-002 TECHNISCH → 202)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/berichten", "host": ["localhost"], "port": "8080", "path": ["api", "berichten"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"senderID\":     \"871686700000900000\",\n  \"receiverID\":   \"871686700001600000\",\n  \"contentType\":  \"AllocationResult\",\n  \"correlationId\": \"MSG-20260311-003\",\n  \"xmlPayload\":   \"<niet-gesloten>\"\n}"
+        }
+      }
+    },
+    {
+      "name": "❌ 4. Ongeldig EAN-18 senderID (fout 650 → 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/berichten", "host": ["localhost"], "port": "8080", "path": ["api", "berichten"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"senderID\":     \"12345\",\n  \"receiverID\":   \"871686700001600000\",\n  \"contentType\":  \"AllocationResult\",\n  \"correlationId\": \"MSG-20260311-004\",\n  \"xmlPayload\":   \"<AllocationResult><mRID>MSG-004</mRID></AllocationResult>\"\n}"
+        }
+      }
+    },
+    {
+      "name": "❌ 5. Ongeldig ProcessTypeID (fout 681 → 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/berichten", "host": ["localhost"], "port": "8080", "path": ["api", "berichten"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"senderID\":     \"871686700000900000\",\n  \"receiverID\":   \"871686700001600000\",\n  \"contentType\":  \"AllocationResult\",\n  \"correlationId\": \"MSG-20260311-005\",\n  \"xmlPayload\":   \"<AllocationResult><mRID>MSG-005</mRID><processType>ONBEKEND</processType></AllocationResult>\"\n}"
+        }
+      }
+    },
+    {
+      "name": "❌ 6. Negatief volume (fout 686 → 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/berichten", "host": ["localhost"], "port": "8080", "path": ["api", "berichten"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"senderID\":     \"871686700000900000\",\n  \"receiverID\":   \"871686700001600000\",\n  \"contentType\":  \"AllocationResult\",\n  \"correlationId\": \"MSG-20260311-006\",\n  \"xmlPayload\":   \"<AllocationResult><mRID>MSG-006</mRID><quantity>-50</quantity></AllocationResult>\"\n}"
+        }
+      }
+    },
+    {
+      "name": "❌ 7. Te veel decimalen (fout 776 → 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/berichten", "host": ["localhost"], "port": "8080", "path": ["api", "berichten"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"senderID\":     \"871686700000900000\",\n  \"receiverID\":   \"871686700001600000\",\n  \"contentType\":  \"AllocationResult\",\n  \"correlationId\": \"MSG-20260311-007\",\n  \"xmlPayload\":   \"<AllocationResult><mRID>MSG-007</mRID><quantity>10.12345</quantity></AllocationResult>\"\n}"
+        }
+      }
+    },
+    {
+      "name": "❌ 8. Periode niet 1 kalenderdag (fout 663 → 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/berichten", "host": ["localhost"], "port": "8080", "path": ["api", "berichten"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"senderID\":     \"871686700000900000\",\n  \"receiverID\":   \"871686700001600000\",\n  \"contentType\":  \"AllocationResult\",\n  \"correlationId\": \"MSG-20260311-008\",\n  \"xmlPayload\":   \"<AllocationResult><mRID>MSG-008</mRID><start>2026-03-11T00:00:00Z</start><end>2026-03-13T00:00:00Z</end></AllocationResult>\"\n}"
+        }
+      }
+    },
+    {
+      "name": "❌ 9. Ongeldig energie-eenheid (fout 667 → 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/berichten", "host": ["localhost"], "port": "8080", "path": ["api", "berichten"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"senderID\":     \"871686700000900000\",\n  \"receiverID\":   \"871686700001600000\",\n  \"contentType\":  \"AllocationResult\",\n  \"correlationId\": \"MSG-20260311-009\",\n  \"xmlPayload\":   \"<AllocationResult><mRID>MSG-009</mRID><measurementUnit>POUNDS</measurementUnit></AllocationResult>\"\n}"
+        }
+      }
+    },
+    {
+      "name": "❌ 10. Verkeerd aantal posities PT15M (fout 671 → 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/berichten", "host": ["localhost"], "port": "8080", "path": ["api", "berichten"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"senderID\":     \"871686700000900000\",\n  \"receiverID\":   \"871686700001600000\",\n  \"contentType\":  \"AllocationResult\",\n  \"correlationId\": \"MSG-20260311-010\",\n  \"xmlPayload\":   \"<TimeSeries><mRID>MSG-010</mRID><resolution>PT15M</resolution><Point><position>1</position><quantity>100</quantity></Point><Point><position>2</position><quantity>200</quantity></Point></TimeSeries>\"\n}"
+        }
+      }
+    },
+    {
+      "name": "❌ 11. Positienummering begint niet bij 1 (fout 676 → 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "http://localhost:8080/api/berichten", "host": ["localhost"], "port": "8080", "path": ["api", "berichten"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"senderID\":     \"871686700000900000\",\n  \"receiverID\":   \"871686700001600000\",\n  \"contentType\":  \"AllocationResult\",\n  \"correlationId\": \"MSG-20260311-011\",\n  \"xmlPayload\":   \"<TimeSeries><mRID>MSG-011</mRID><Point><position>2</position></Point><Point><position>3</position></Point></TimeSeries>\"\n}"
+        }
+      }
+    },
+    {
+      "name": "📋 GET — Alle ontvangen berichten",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:8080/api/berichten", "host": ["localhost"], "port": "8080", "path": ["api", "berichten"] }
+      }
+    },
+    {
+      "name": "📋 GET — Één bericht op ID",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:8080/api/berichten/VUL-ID-IN", "host": ["localhost"], "port": "8080", "path": ["api", "berichten", "VUL-ID-IN"] }
+      }
+    },
+    {
+      "name": "🗑️ DELETE — Bericht verwijderen",
+      "request": {
+        "method": "DELETE",
+        "url": { "raw": "http://localhost:8080/api/berichten/VUL-ID-IN", "host": ["localhost"], "port": "8080", "path": ["api", "berichten", "VUL-ID-IN"] }
+      }
+    }
+  ]
+}

@@ -3,4 +3,7 @@ C:\Users\loek\engie-mock\java-api\src\main\java\com\engie\api\EngieBerichtApiApp
 C:\Users\loek\engie-mock\java-api\src\main\java\com\engie\api\model\Bericht.java
 C:\Users\loek\engie-mock\java-api\src\main\java\com\engie\api\model\BerichtRequest.java
 C:\Users\loek\engie-mock\java-api\src\main\java\com\engie\api\model\OntvangstBevestiging.java
+C:\Users\loek\engie-mock\java-api\src\main\java\com\engie\api\model\ValidationFout.java
+C:\Users\loek\engie-mock\java-api\src\main\java\com\engie\api\model\ValidationResultaat.java
 C:\Users\loek\engie-mock\java-api\src\main\java\com\engie\api\service\BerichtService.java
+C:\Users\loek\engie-mock\java-api\src\main\java\com\engie\api\service\BerichtValidatieService.java

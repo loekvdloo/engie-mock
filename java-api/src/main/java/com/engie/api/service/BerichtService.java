@@ -3,23 +3,30 @@ package com.engie.api.service;
 import com.engie.api.model.Bericht;
 import com.engie.api.model.BerichtRequest;
 import com.engie.api.model.OntvangstBevestiging;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Service die berichten in-memory opslaat en beheert.
- * Bij herstart van de applicatie worden berichten gewist.
+ * Houdt ook bij welke MessageID's en allocatierun-ID's al verwerkt zijn.
  */
 @Service
 public class BerichtService {
 
+    private static final Logger log = LoggerFactory.getLogger(BerichtService.class);
+
     private final ConcurrentHashMap<String, Bericht> berichtenStore = new ConcurrentHashMap<>();
+
+    /** Bijhouden van reeds verwerkte berichtID's (TEN-500023, Code 669) */
+    private final Set<String> verwerkteMeesageIds = ConcurrentHashMap.newKeySet();
+
+    /** Bijhouden van reeds verwerkte allocatierun-ID's (Code 769) */
+    private final Set<String> verwerkteAllocatieIds = ConcurrentHashMap.newKeySet();
 
     /**
      * Verwerk een inkomend bericht en geef een technische ontvangstbevestiging terug.
@@ -30,14 +37,16 @@ public class BerichtService {
 
         Bericht bericht = Bericht.builder()
                 .id(berichtId)
-                .afzender(request.getAfzender())
-                .onderwerp(request.getOnderwerp())
+                .afzender(request.getSenderID())
+                .onderwerp(request.getContentType())
                 .xmlPayload(request.getXmlPayload())
                 .ontvangstTijd(nu)
                 .status("ONTVANGEN")
                 .build();
 
         berichtenStore.put(berichtId, bericht);
+        log.info("[ONTVANGST] berichtId={} senderID={} contentType={} tijdstip={}",
+                berichtId, request.getSenderID(), request.getContentType(), nu);
 
         return OntvangstBevestiging.builder()
                 .berichtId(berichtId)
@@ -47,24 +56,29 @@ public class BerichtService {
                 .build();
     }
 
-    /**
-     * Haal alle opgeslagen berichten op.
-     */
+    /** Controleer of een messageId al eerder verwerkt is */
+    public boolean isBerichtIdAlVerwerkt(String messageId) {
+        return !verwerkteMeesageIds.add(messageId);
+    }
+
+    /** Controleer of een allocatierun-ID al eerder verwerkt is */
+    public boolean isAllocatieIdAlVerwerkt(String allocatieId) {
+        return !verwerkteAllocatieIds.add(allocatieId);
+    }
+
+    /** Haal alle opgeslagen berichten op. */
     public List<Bericht> getAlleBerichten() {
         return new ArrayList<>(berichtenStore.values());
     }
 
-    /**
-     * Haal één bericht op via ID.
-     */
+    /** Haal één bericht op via ID. */
     public Optional<Bericht> getBerichtById(String id) {
         return Optional.ofNullable(berichtenStore.get(id));
     }
 
-    /**
-     * Verwijder een bericht via ID.
-     */
+    /** Verwijder een bericht via ID. */
     public boolean verwijderBericht(String id) {
         return berichtenStore.remove(id) != null;
     }
 }
+

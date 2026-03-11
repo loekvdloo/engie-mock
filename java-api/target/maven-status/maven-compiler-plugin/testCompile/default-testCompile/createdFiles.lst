@@ -1,2 +1,3 @@
 com\engie\api\controller\BerichtControllerTest.class
+com\engie\api\service\BerichtValidatieServiceTest.class
 com\engie\api\service\BerichtServiceTest.class

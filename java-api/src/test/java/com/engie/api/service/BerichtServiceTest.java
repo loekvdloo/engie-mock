@@ -120,4 +120,30 @@ class BerichtServiceTest {
         r.setXmlPayload("<factuur><id>1</id></factuur>");
         return r;
     }
+
+    // ── isBerichtIdAlVerwerkt ─────────────────────────────────────────────────
+
+    @Test
+    void isBerichtIdAlVerwerkt_eersteKeer_geeftFalse() {
+        assertFalse(service.isBerichtIdAlVerwerkt("MSG-001"));
+    }
+
+    @Test
+    void isBerichtIdAlVerwerkt_tweedeKeer_geeftTrue() {
+        service.isBerichtIdAlVerwerkt("MSG-001");
+        assertTrue(service.isBerichtIdAlVerwerkt("MSG-001"));
+    }
+
+    // ── isAllocatieIdAlVerwerkt ───────────────────────────────────────────────
+
+    @Test
+    void isAllocatieIdAlVerwerkt_eersteKeer_geeftFalse() {
+        assertFalse(service.isAllocatieIdAlVerwerkt("ALLOC-001"));
+    }
+
+    @Test
+    void isAllocatieIdAlVerwerkt_tweedeKeer_geeftTrue() {
+        service.isAllocatieIdAlVerwerkt("ALLOC-001");
+        assertTrue(service.isAllocatieIdAlVerwerkt("ALLOC-001"));
+    }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.engie.api.controller.BerichtControllerTest" time="2.525" tests="9" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.engie.api.service.BerichtValidatieServiceTest" time="0.236" tests="21" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="25"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -68,52 +68,108 @@
     <property name="java.class.version" value="69.0"/>
     <property name="LOGGED_APPLICATION_NAME" value="[engie-bericht-api] "/>
   </properties>
-  <testcase name="getAlleBerichten_metBerichten_geeftAlleItems" classname="com.engie.api.controller.BerichtControllerTest" time="0.209">
-    <system-out><![CDATA[10:48:07.218 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.engie.api.controller.BerichtControllerTest]: BerichtControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-10:48:07.363 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.engie.api.EngieBerichtApiApplication for test class com.engie.api.controller.BerichtControllerTest
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
-
- :: Spring Boot ::                (v3.4.3)
-
-2026-03-11T10:48:07.721+01:00  INFO 3868 --- [engie-bericht-api] [           main] c.e.a.controller.BerichtControllerTest   : Starting BerichtControllerTest using Java 25.0.2 with PID 3868 (started by loek in C:\Users\loek\engie-mock\java-api)
-2026-03-11T10:48:07.722+01:00 DEBUG 3868 --- [engie-bericht-api] [           main] c.e.a.controller.BerichtControllerTest   : Running with Spring Boot v3.4.3, Spring v6.2.3
-2026-03-11T10:48:07.722+01:00  INFO 3868 --- [engie-bericht-api] [           main] c.e.a.controller.BerichtControllerTest   : No active profile set, falling back to 1 default profile: "default"
-2026-03-11T10:48:09.226+01:00  INFO 3868 --- [engie-bericht-api] [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-03-11T10:48:09.226+01:00  INFO 3868 --- [engie-bericht-api] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-03-11T10:48:09.228+01:00  INFO 3868 --- [engie-bericht-api] [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
-2026-03-11T10:48:09.271+01:00  INFO 3868 --- [engie-bericht-api] [           main] c.e.a.controller.BerichtControllerTest   : Started BerichtControllerTest in 1.853 seconds (process running for 2.949)
+  <testcase name="semantischeFout_leertTotAfgewezen" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.097">
+    <system-out><![CDATA[2026-03-11T10:48:09.738+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=669 type=TECHNISCH omschrijving="MessageID ontbreekt in het bericht." tijdstip=2026-03-11T10:48:09.737693100
+2026-03-11T10:48:09.746+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=681 type=SEMANTISCH omschrijving="ProcessTypeID 'ONBEKEND' is ongeldig of past niet bij de inhoud." tijdstip=2026-03-11T10:48:09.746693500
+2026-03-11T10:48:09.749+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=AFGEWEZEN fouten=2
 ]]></system-out>
-    <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
-WARNING: A Java agent has been loaded dynamically (C:\Users\loek\.m2\repository\net\bytebuddy\byte-buddy-agent\1.15.11\byte-buddy-agent-1.15.11.jar)
-WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
-WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
-WARNING: Dynamic loading of agents will be disallowed by default in a future release
+  </testcase>
+  <testcase name="verkeerAantalPosities_geeftFout671" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.013">
+    <system-out><![CDATA[2026-03-11T10:48:09.752+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=669 type=TECHNISCH omschrijving="MessageID ontbreekt in het bericht." tijdstip=2026-03-11T10:48:09.752692300
+2026-03-11T10:48:09.758+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=671 type=SEMANTISCH omschrijving="Aantal posities 2 klopt niet met resolutie PT15M (verwacht: 96)." tijdstip=2026-03-11T10:48:09.758692
+2026-03-11T10:48:09.762+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=AFGEWEZEN fouten=2
+]]></system-out>
+  </testcase>
+  <testcase name="geldigProcessType_geeftGeenFout681" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.013">
+    <system-out><![CDATA[2026-03-11T10:48:09.765+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=669 type=TECHNISCH omschrijving="MessageID ontbreekt in het bericht." tijdstip=2026-03-11T10:48:09.765693400
+2026-03-11T10:48:09.776+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=BEVESTIGD (technische fouten) fouten=1
+]]></system-out>
+  </testcase>
+  <testcase name="periodeEenKalenderdag_geeftGeenFout663" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.01">
+    <system-out><![CDATA[2026-03-11T10:48:09.779+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=669 type=TECHNISCH omschrijving="MessageID ontbreekt in het bericht." tijdstip=2026-03-11T10:48:09.779694100
+2026-03-11T10:48:09.787+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=BEVESTIGD (technische fouten) fouten=1
+]]></system-out>
+  </testcase>
+  <testcase name="ongedigeXml_geeftTechnischeFout" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.004">
+    <system-out><![CDATA[2026-03-11T10:48:09.792+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=XML-002 type=TECHNISCH omschrijving="xmlPayload bevat geen geldige XML: XML document structures must start and end within the same entity." tijdstip=2026-03-11T10:48:09.792692
+2026-03-11T10:48:09.792+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=BEVESTIGD (technische fouten) fouten=1
+]]></system-out>
+    <system-err><![CDATA[[Fatal Error] :1:16: XML document structures must start and end within the same entity.
 ]]></system-err>
   </testcase>
-  <testcase name="verwijderBericht_bestaandId_geeft204" classname="com.engie.api.controller.BerichtControllerTest" time="0.017"/>
-  <testcase name="postBericht_semantischeFout_geeft400MetAfwijzing" classname="com.engie.api.controller.BerichtControllerTest" time="0.055">
-    <system-out><![CDATA[2026-03-11T10:48:09.561+01:00  INFO 3868 --- [engie-bericht-api] [           main] c.e.api.controller.BerichtController     : [INKOMEND] senderID=871686700000900000 contentType=AllocationResult tijdstip=2026-03-11T10:48:09.561730300
-2026-03-11T10:48:09.563+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.controller.BerichtController     : [AFGEWEZEN] senderID=871686700000900000 fouten=1
+  <testcase name="ongedigEan_geeftFout650" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.008">
+    <system-out><![CDATA[2026-03-11T10:48:09.796+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=650 type=SEMANTISCH omschrijving="senderID '123' is geen geldige EAN-18 code." tijdstip=2026-03-11T10:48:09.796693200
+2026-03-11T10:48:09.800+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=AFGEWEZEN fouten=1
 ]]></system-out>
   </testcase>
-  <testcase name="verwijderBericht_onbestaandId_geeft404" classname="com.engie.api.controller.BerichtControllerTest" time="0.004"/>
-  <testcase name="postBericht_geldigBericht_geeft202MetBevestiging" classname="com.engie.api.controller.BerichtControllerTest" time="0.006">
-    <system-out><![CDATA[2026-03-11T10:48:09.582+01:00  INFO 3868 --- [engie-bericht-api] [           main] c.e.api.controller.BerichtController     : [INKOMEND] senderID=871686700000900000 contentType=AllocationResult tijdstip=2026-03-11T10:48:09.582697700
-2026-03-11T10:48:09.582+01:00  INFO 3868 --- [engie-bericht-api] [           main] c.e.api.controller.BerichtController     : [BEVESTIGD] berichtId=test-uuid-123 status=GOEDGEKEURD
+  <testcase name="periodeNietEenKalenderdag_geeftFout663" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.008">
+    <system-out><![CDATA[2026-03-11T10:48:09.803+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=669 type=TECHNISCH omschrijving="MessageID ontbreekt in het bericht." tijdstip=2026-03-11T10:48:09.803695100
+2026-03-11T10:48:09.805+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=663 type=SEMANTISCH omschrijving="Periode is geen exacte kalenderdag: start=2026-03-11T00:00:00Z end=2026-03-13T00:00:00Z" tijdstip=2026-03-11T10:48:09.805693
+2026-03-11T10:48:09.808+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=AFGEWEZEN fouten=2
 ]]></system-out>
   </testcase>
-  <testcase name="getAlleBerichten_legeStore_geeftLegeArray" classname="com.engie.api.controller.BerichtControllerTest" time="0.008"/>
-  <testcase name="getBerichtById_bestaandId_geeft200MetBericht" classname="com.engie.api.controller.BerichtControllerTest" time="0.005"/>
-  <testcase name="getBerichtById_onbestaandId_geeft404" classname="com.engie.api.controller.BerichtControllerTest" time="0.004"/>
-  <testcase name="postBericht_technischeFout_geeft202MetValidatieDetails" classname="com.engie.api.controller.BerichtControllerTest" time="0.006">
-    <system-out><![CDATA[2026-03-11T10:48:09.610+01:00  INFO 3868 --- [engie-bericht-api] [           main] c.e.api.controller.BerichtController     : [INKOMEND] senderID=871686700000900000 contentType=AllocationResult tijdstip=2026-03-11T10:48:09.610730900
-2026-03-11T10:48:09.610+01:00  INFO 3868 --- [engie-bericht-api] [           main] c.e.api.controller.BerichtController     : [BEVESTIGD] berichtId=test-uuid-456 status=BEVESTIGD
+  <testcase name="teVeelDecimalen_geeftFout776" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.007">
+    <system-out><![CDATA[2026-03-11T10:48:09.811+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=669 type=TECHNISCH omschrijving="MessageID ontbreekt in het bericht." tijdstip=2026-03-11T10:48:09.811695100
+2026-03-11T10:48:09.814+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=776 type=SEMANTISCH omschrijving="Volume '10.12345' heeft meer dan 3 decimalen." tijdstip=2026-03-11T10:48:09.814692900
+2026-03-11T10:48:09.816+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=AFGEWEZEN fouten=2
+]]></system-out>
+  </testcase>
+  <testcase name="isGeldigEan18_teKort_geeftFalse" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.0"/>
+  <testcase name="positieIncrementOnjuist_geeftFout782" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.007">
+    <system-out><![CDATA[2026-03-11T10:48:09.819+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=669 type=TECHNISCH omschrijving="MessageID ontbreekt in het bericht." tijdstip=2026-03-11T10:48:09.819694300
+2026-03-11T10:48:09.822+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=782 type=SEMANTISCH omschrijving="Positie-increment klopt niet: positie 1 gevolgd door 3." tijdstip=2026-03-11T10:48:09.822694200
+2026-03-11T10:48:09.824+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=AFGEWEZEN fouten=2
+]]></system-out>
+  </testcase>
+  <testcase name="ongedigProcessType_geeftFout681" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.007">
+    <system-out><![CDATA[2026-03-11T10:48:09.827+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=669 type=TECHNISCH omschrijving="MessageID ontbreekt in het bericht." tijdstip=2026-03-11T10:48:09.827693600
+2026-03-11T10:48:09.830+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=681 type=SEMANTISCH omschrijving="ProcessTypeID 'ONBEKEND' is ongeldig of past niet bij de inhoud." tijdstip=2026-03-11T10:48:09.830692700
+2026-03-11T10:48:09.832+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=AFGEWEZEN fouten=2
+]]></system-out>
+  </testcase>
+  <testcase name="negatiefVolume_geeftFout686" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.011">
+    <system-out><![CDATA[2026-03-11T10:48:09.834+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=669 type=TECHNISCH omschrijving="MessageID ontbreekt in het bericht." tijdstip=2026-03-11T10:48:09.834693900
+2026-03-11T10:48:09.841+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=686 type=SEMANTISCH omschrijving="Volume '-10' is negatief, maar moet positief zijn." tijdstip=2026-03-11T10:48:09.841692
+2026-03-11T10:48:09.843+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=AFGEWEZEN fouten=2
+]]></system-out>
+  </testcase>
+  <testcase name="ongedigeEenhied_geeftFout667" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.007">
+    <system-out><![CDATA[2026-03-11T10:48:09.845+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=669 type=TECHNISCH omschrijving="MessageID ontbreekt in het bericht." tijdstip=2026-03-11T10:48:09.845694800
+2026-03-11T10:48:09.849+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=667 type=SEMANTISCH omschrijving="Energie-eenheid 'POUNDS' past niet bij het product." tijdstip=2026-03-11T10:48:09.849692400
+2026-03-11T10:48:09.850+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=AFGEWEZEN fouten=2
+]]></system-out>
+  </testcase>
+  <testcase name="geldigeEenheid_geeftGeenFout667" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.005">
+    <system-out><![CDATA[2026-03-11T10:48:09.852+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=669 type=TECHNISCH omschrijving="MessageID ontbreekt in het bericht." tijdstip=2026-03-11T10:48:09.852693700
+2026-03-11T10:48:09.856+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=BEVESTIGD (technische fouten) fouten=1
+]]></system-out>
+  </testcase>
+  <testcase name="geldigBericht_geeftGoedgekeurd" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.005">
+    <system-out><![CDATA[2026-03-11T10:48:09.862+01:00  INFO 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=GOEDGEKEURD
+]]></system-out>
+  </testcase>
+  <testcase name="isGeldigEan18_correcteCode_geeftTrue" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.001"/>
+  <testcase name="geldigVolume_geeftGeenFout" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.005">
+    <system-out><![CDATA[2026-03-11T10:48:09.864+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=669 type=TECHNISCH omschrijving="MessageID ontbreekt in het bericht." tijdstip=2026-03-11T10:48:09.864695200
+2026-03-11T10:48:09.868+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=BEVESTIGD (technische fouten) fouten=1
+]]></system-out>
+  </testcase>
+  <testcase name="isGeldigEan18_letters_geeftFalse" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.0"/>
+  <testcase name="legeXmlPayload_geeftTechnischeFout" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.001">
+    <system-out><![CDATA[2026-03-11T10:48:09.870+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=XML-001 type=TECHNISCH omschrijving="xmlPayload is leeg of ontbreekt." tijdstip=2026-03-11T10:48:09.870693700
+2026-03-11T10:48:09.870+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=BEVESTIGD (technische fouten) fouten=1
+]]></system-out>
+  </testcase>
+  <testcase name="dubbeleMessageId_geeftFout669" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.011">
+    <system-out><![CDATA[2026-03-11T10:48:09.875+01:00  INFO 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=GOEDGEKEURD
+2026-03-11T10:48:09.876+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=669 type=TECHNISCH omschrijving="MessageID 'MSG-DUBBEL-001' is al eerder verwerkt (duplicaat)." tijdstip=2026-03-11T10:48:09.876692600
+2026-03-11T10:48:09.880+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=BEVESTIGD (technische fouten) fouten=1
+]]></system-out>
+  </testcase>
+  <testcase name="eerstePositieNietEen_geeftFout676" classname="com.engie.api.service.BerichtValidatieServiceTest" time="0.006">
+    <system-out><![CDATA[2026-03-11T10:48:09.883+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=669 type=TECHNISCH omschrijving="MessageID ontbreekt in het bericht." tijdstip=2026-03-11T10:48:09.883692800
+2026-03-11T10:48:09.885+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIEFOUT] code=676 type=SEMANTISCH omschrijving="Eerste positie is '2', verwacht '1'." tijdstip=2026-03-11T10:48:09.885692600
+2026-03-11T10:48:09.887+01:00  WARN 3868 --- [engie-bericht-api] [           main] c.e.api.service.BerichtValidatieService  : [VALIDATIE] status=AFGEWEZEN fouten=2
 ]]></system-out>
   </testcase>
 </testsuite>

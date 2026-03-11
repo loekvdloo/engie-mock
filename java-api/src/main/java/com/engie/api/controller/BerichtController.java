@@ -3,61 +3,66 @@ package com.engie.api.controller;
 import com.engie.api.model.Bericht;
 import com.engie.api.model.BerichtRequest;
 import com.engie.api.model.OntvangstBevestiging;
+import com.engie.api.model.ValidationResultaat;
 import com.engie.api.service.BerichtService;
+import com.engie.api.service.BerichtValidatieService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * REST controller voor het ontvangen en ophalen van berichten.
- *
- * Endpoints:
- *   POST   /api/berichten          → Ontvang een bericht (JSON met XML payload)
- *   GET    /api/berichten          → Haal alle ontvangen berichten op
- *   GET    /api/berichten/{id}     → Haal één bericht op via ID
- *   DELETE /api/berichten/{id}     → Verwijder een bericht via ID
- */
 @RestController
 @RequestMapping("/api/berichten")
 public class BerichtController {
 
-    private final BerichtService berichtService;
+    private static final Logger log = LoggerFactory.getLogger(BerichtController.class);
 
-    public BerichtController(BerichtService berichtService) {
+    private final BerichtService berichtService;
+    private final BerichtValidatieService validatieService;
+
+    public BerichtController(BerichtService berichtService, BerichtValidatieService validatieService) {
         this.berichtService = berichtService;
+        this.validatieService = validatieService;
     }
 
-    /**
-     * Ontvang een bericht met XML payload.
-     * Geeft direct een technische ontvangstbevestiging terug (202 Accepted).
-     *
-     * Voorbeeld request body:
-     * {
-     *   "afzender": "systeem-A",
-     *   "onderwerp": "FactuurBericht",
-     *   "xmlPayload": "<factuur><id>123</id><bedrag>99.99</bedrag></factuur>"
-     * }
-     */
     @PostMapping
     public ResponseEntity<OntvangstBevestiging> ontvangBericht(@RequestBody BerichtRequest request) {
+        log.info("[INKOMEND] senderID={} contentType={} tijdstip={}",
+                request.getSenderID(), request.getContentType(), LocalDateTime.now());
+
+        ValidationResultaat validatie = validatieService.valideer(request);
+
+        if (validatie.getStatus() == ValidationResultaat.Status.AFGEWEZEN) {
+            OntvangstBevestiging afwijzing = OntvangstBevestiging.builder()
+                    .status("AFGEWEZEN")
+                    .ontvangstTijd(LocalDateTime.now())
+                    .toelichting("Bericht afgewezen wegens semantische fouten. Zie validatie voor details.")
+                    .validatie(validatie)
+                    .build();
+            log.warn("[AFGEWEZEN] senderID={} fouten={}", request.getSenderID(), validatie.getFouten().size());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(afwijzing);
+        }
+
         OntvangstBevestiging bevestiging = berichtService.ontvangBericht(request);
+
+        if (validatie.heeftFouten()) {
+            bevestiging.setToelichting("Bericht ontvangen met technische opmerkingen. Zie validatie voor details.");
+            bevestiging.setValidatie(validatie);
+        }
+
+        log.info("[BEVESTIGD] berichtId={} status={}", bevestiging.getBerichtId(), validatie.getStatus());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(bevestiging);
     }
 
-    /**
-     * Haal alle ontvangen berichten op (inclusief XML payload).
-     */
     @GetMapping
     public ResponseEntity<List<Bericht>> getAlleBerichten() {
-        List<Bericht> berichten = berichtService.getAlleBerichten();
-        return ResponseEntity.ok(berichten);
+        return ResponseEntity.ok(berichtService.getAlleBerichten());
     }
 
-    /**
-     * Haal één specifiek bericht op via zijn unieke ID.
-     */
     @GetMapping("/{id}")
     public ResponseEntity<Bericht> getBerichtById(@PathVariable String id) {
         return berichtService.getBerichtById(id)
@@ -65,13 +70,9 @@ public class BerichtController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    /**
-     * Verwijder een bericht via ID.
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> verwijderBericht(@PathVariable String id) {
-        boolean verwijderd = berichtService.verwijderBericht(id);
-        return verwijderd
+        return berichtService.verwijderBericht(id)
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
     }
