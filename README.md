@@ -15,67 +15,70 @@
 |------|--------|
 | Java | 21 of hoger (getest op 25) |
 | Maven | Niet nodig — wordt automatisch gedownload via `run.ps1` |
-| MySQL | 8.0 of hoger (voor productie-gebruik) |
+| MariaDB | 10.6 of hoger (voor productie-gebruik) — [download](https://mariadb.org/download/) |
 
 ---
 
-## Database instellen (MySQL)
+## Database instellen (MariaDB)
 
-De applicatie gebruikt **MySQL** als persistente opslag. Flyway voert automatisch migraties uit bij opstarten.
+De applicatie gebruikt **MariaDB** als persistente opslag. MariaDB is volledig compatibel met MySQL, **gratis te downloaden** zonder account, en heeft een simpele Windows-installer.
 
-> **Tests** gebruiken H2 in-memory — geen MySQL vereist voor `mvn test`.
+> **Tests** gebruiken H2 in-memory — geen MariaDB vereist voor `mvn test`.
 
 ---
 
-### Stap 1 — MySQL installeren (Windows)
+### Stap 1 — MariaDB installeren (Windows)
 
-**Optie A: MySQL Installer (aanbevolen)**
+**Optie A: Directe download (aanbevolen)**
 
-1. Ga naar [https://dev.mysql.com/downloads/installer/](https://dev.mysql.com/downloads/installer/)
-2. Download **MySQL Installer for Windows** (kies de offline versie ~450 MB)
-3. Voer de installer uit en kies **"Developer Default"** of **"Server only"**
-4. Volg de wizard:
-   - **Type and Networking** → poort `3306` (standaard), vink "Open Windows Firewall port" aan
-   - **Authentication Method** → kies "Use Strong Password Encryption"
-   - **Accounts and Roles** → stel een root-wachtwoord in, onthoud dit!
-   - **Windows Service** → laat "Start the MySQL Server at System Startup" aangevinkt
-5. Klik op **Execute** → MySQL wordt geïnstalleerd en gestart als Windows-service
+1. Ga naar [https://mariadb.org/download/](https://mariadb.org/download/)
+2. Kies **Windows** als OS en download de **MSI-installer** (bijv. `mariadb-11.x.x-winx64.msi`)
+3. Voer de installer uit en volg de wizard:
+   - **Root password** → stel een root-wachtwoord in, onthoud dit!
+   - **Windows Service** → laat "Install as service" aangevinkt (servernaam: `MariaDB`)
+   - **Default instance port** → `3306` (standaard laten staan)
+4. Klik op **Install** → MariaDB wordt geïnstalleerd en als Windows-service gestart
 
-**Optie B: Chocolatey (via PowerShell als Administrator)**
+**Optie B: Winget (Windows Package Manager)**
 
 ```powershell
-choco install mysql -y
+winget install MariaDB.Server
 ```
 
-**Optie C: Winget (Windows Package Manager)**
+**Optie C: Chocolatey (via PowerShell als Administrator)**
 
 ```powershell
-winget install Oracle.MySQL
+choco install mariadb -y
 ```
 
 ---
 
 ### Stap 2 — Verbinding testen
 
-Open een nieuwe PowerShell of de **MySQL Command Line Client** (staat in het Startmenu na installatie):
+Open de **HeidiSQL** client (wordt meegeïnstalleerd met de MSI) of gebruik de commandoregel:
 
 ```powershell
-# Via PowerShell (mysql.exe moet in PATH staan, anders volledig pad gebruiken)
-mysql -u root -p
+# Standaard installatiepad op Windows
+& "C:\Program Files\MariaDB 11.x\bin\mariadb.exe" -u root -p
 ```
 
-Je wordt gevraagd om het root-wachtwoord dat je in stap 1 hebt ingesteld. Bij succes zie je:
+> Als `mariadb` in PATH staat (controleer na herstart van PowerShell):
+> ```powershell
+> mariadb -u root -p
+> ```
+
+Voer het root-wachtwoord uit stap 1 in. Bij succes zie je:
 
 ```
-Welcome to the MySQL monitor. Commands end with ; or \g.
-mysql>
+Welcome to the MariaDB monitor. Commands end with ; or \g.
+MariaDB [(none)]>
 ```
 
 ---
 
 ### Stap 3 — Database en gebruiker aanmaken
 
-Voer de volgende SQL-commando's uit in de MySQL-prompt:
+Voer de volgende SQL-commando's uit in de MariaDB-prompt:
 
 ```sql
 -- Database aanmaken
@@ -95,7 +98,8 @@ SHOW DATABASES;
 SELECT User, Host FROM mysql.user WHERE User = 'engie_user';
 ```
 
-Verlaat de MySQL-prompt:
+Verlaat de MariaDB-prompt:
+
 ```sql
 EXIT;
 ```
@@ -105,11 +109,11 @@ EXIT;
 ### Stap 4 — Verbinding verifiëren als applicatiegebruiker
 
 ```powershell
-mysql -u engie_user -p engie_berichten
+mariadb -u engie_user -p engie_berichten
 # Vul wachtwoord in: engie_pass
 ```
 
-Als je de `mysql>`-prompt ziet, werkt de verbinding correct.
+Als je `MariaDB [engie_berichten]>` ziet, werkt de verbinding correct.
 
 ---
 
@@ -141,7 +145,7 @@ SHOW TABLES;
 Standaardwaarden in `src/main/resources/application.properties`:
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/engie_berichten?useSSL=false&serverTimezone=UTC
+spring.datasource.url=jdbc:mariadb://localhost:3306/engie_berichten
 spring.datasource.username=engie_user
 spring.datasource.password=engie_pass
 ```
@@ -155,9 +159,9 @@ Pas deze aan als je een ander wachtwoord, hostnaam of poortnummer gebruikt.
 | Probleem | Oplossing |
 |----------|-----------|
 | `Access denied for user 'engie_user'` | Controleer wachtwoord en of `GRANT` correct is uitgevoerd |
-| `Communications link failure` | MySQL-service staat niet aan: `net start MySQL80` in PowerShell (als Admin) |
+| `Can't connect to server` | MariaDB-service staat niet aan: `net start MariaDB` in PowerShell (als Admin) |
 | `Unknown database 'engie_berichten'` | Voer stap 3 opnieuw uit — database is niet aangemaakt |
-| `mysql` niet herkend als commando | Voeg `C:\Program Files\MySQL\MySQL Server 8.0\bin` toe aan je PATH |
+| `mariadb` niet herkend als commando | Voeg `C:\Program Files\MariaDB 11.x\bin` toe aan je PATH, of herstart PowerShell na installatie |
 
 ---
 
@@ -359,10 +363,10 @@ java-api/
 
 - **Framework:** Spring Boot 3.4.3
 - **Java:** 21+ (getest op 25)
-- **Database:** MySQL 8+ (productie) / H2 in-memory (tests)
+- **Database:** MariaDB 10.6+ (productie) / H2 in-memory (tests)
 - **ORM:** Spring Data JPA + Hibernate
 - **Migraties:** Flyway (`V1__init_schema.sql`) — automatisch uitgevoerd bij opstarten
-- **Opslag:** Persistent in MySQL — berichten, validatiefouten en auditlogs blijven bewaard
+- **Opslag:** Persistent in MariaDB — berichten, validatiefouten en auditlogs blijven bewaard
 - **Poort:** `8080`
 - **Testframework:** JUnit 5 + Mockito + MockMvc
 - **Validatie:** XPath XML-parsing, EAN-18 Luhn-checksum, 15+ regels per spec
