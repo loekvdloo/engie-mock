@@ -1,6 +1,11 @@
 # Engie Bericht API
 
-Spring Boot REST API voor het ontvangen van berichten (JSON met XML payload) en het retourneren van een technische ontvangstbevestiging.
+![Java](https://img.shields.io/badge/Java-25-orange?logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.3-brightgreen?logo=springboot)
+![Maven](https://img.shields.io/badge/Maven-3.9.6-blue?logo=apachemaven)
+![Tests](https://img.shields.io/badge/Tests-16%20passing-success?logo=junit5)
+
+> REST API voor het ontvangen van berichten (JSON met XML payload) en het retourneren van een technische ontvangstbevestiging.
 
 ---
 
