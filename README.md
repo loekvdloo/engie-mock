@@ -169,7 +169,7 @@ Het `POST /api/berichten` endpoint voert automatisch alle technische validaties 
 | 782 | SEMANTISCH | Positie-increment is niet 1 |
 | 686 | SEMANTISCH | Volume is negatief |
 | 776 | SEMANTISCH | Volume heeft meer dan 3 decimalen |
-| 681 | SEMANTISCH | ProcessTypeID is ongeldig |
+| 681/747 | SEMANTISCH | ProcessTypeID is ongeldig of past niet bij inhoud/ontvanger |
 | 701/745/754 | SEMANTISCH | SOAP-header senderID/receiverID wijkt af van XML |
 | 683 | SEMANTISCH | Herkomst/status-combinatie is ongeldig |
 | 667/668 | SEMANTISCH | Energie-eenheid (measurementUnit) is ongeldig |
