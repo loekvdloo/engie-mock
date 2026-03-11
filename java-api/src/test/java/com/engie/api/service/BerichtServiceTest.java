@@ -3,6 +3,8 @@ package com.engie.api.service;
 import com.engie.api.model.Bericht;
 import com.engie.api.model.BerichtRequest;
 import com.engie.api.model.OntvangstBevestiging;
+import com.engie.api.model.ValidationFout;
+import com.engie.api.model.ValidationResultaat;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -56,6 +58,44 @@ class BerichtServiceTest {
         OntvangstBevestiging b2 = service.ontvangBericht(request);
 
         assertNotEquals(b1.getBerichtId(), b2.getBerichtId());
+    }
+
+    @Test
+    void ontvangBericht_metAfgewezenValidatie_slaatStatusAfgewezenOp() {
+        ValidationResultaat validatie = new ValidationResultaat();
+        validatie.setStatus(ValidationResultaat.Status.AFGEWEZEN);
+        validatie.voegFoutToe("650", "EAN ongeldig.", ValidationFout.FoutType.SEMANTISCH);
+
+        OntvangstBevestiging bevestiging = service.ontvangBericht(maakRequest(), validatie);
+        Optional<Bericht> opgeslagen = service.getBerichtById(bevestiging.getBerichtId());
+
+        assertTrue(opgeslagen.isPresent());
+        assertEquals("AFGEWEZEN", opgeslagen.get().getStatus());
+    }
+
+    @Test
+    void ontvangBericht_metBevestigdValidatie_slaatStatusBevestigdOp() {
+        ValidationResultaat validatie = new ValidationResultaat();
+        validatie.setStatus(ValidationResultaat.Status.BEVESTIGD);
+        validatie.voegFoutToe("669", "Duplicate MessageID.", ValidationFout.FoutType.TECHNISCH);
+
+        OntvangstBevestiging bevestiging = service.ontvangBericht(maakRequest(), validatie);
+        Optional<Bericht> opgeslagen = service.getBerichtById(bevestiging.getBerichtId());
+
+        assertTrue(opgeslagen.isPresent());
+        assertEquals("BEVESTIGD", opgeslagen.get().getStatus());
+    }
+
+    @Test
+    void ontvangBericht_metGoedgekeurdValidatie_slaatStatusOntvangenOp() {
+        ValidationResultaat validatie = new ValidationResultaat();
+        validatie.setStatus(ValidationResultaat.Status.GOEDGEKEURD);
+
+        OntvangstBevestiging bevestiging = service.ontvangBericht(maakRequest(), validatie);
+        Optional<Bericht> opgeslagen = service.getBerichtById(bevestiging.getBerichtId());
+
+        assertTrue(opgeslagen.isPresent());
+        assertEquals("ONTVANGEN", opgeslagen.get().getStatus());
     }
 
     // ── getAlleBerichten ──────────────────────────────────────────────────────

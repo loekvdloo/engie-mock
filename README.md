@@ -3,7 +3,7 @@
 ![Java](https://img.shields.io/badge/Java-25-orange?logo=openjdk)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.3-brightgreen?logo=springboot)
 ![Maven](https://img.shields.io/badge/Maven-3.9.6-blue?logo=apachemaven)
-![Tests](https://img.shields.io/badge/Tests-43%20passing-success?logo=junit5)
+![Tests](https://img.shields.io/badge/Tests-47%20passing-success?logo=junit5)
 
 > REST API voor het ontvangen van berichten (JSON met XML payload) en het retourneren van een technische ontvangstbevestiging.
 
@@ -15,7 +15,7 @@
 |------|--------|
 | Java | 21 of hoger (getest op 25) |
 | Maven | Niet nodig — wordt automatisch gedownload via `run.ps1` |
-| MariaDB | 10.6 of hoger (voor productie-gebruik) — [download](https://mariadb.org/download/) |
+| MariaDB | 10.6 of hoger (voor productie-gebruik, getest op 12.2) — [download](https://mariadb.org/download/) |
 
 ---
 
@@ -58,8 +58,8 @@ choco install mariadb -y
 Open de **HeidiSQL** client (wordt meegeïnstalleerd met de MSI) of gebruik de commandoregel:
 
 ```powershell
-# Standaard installatiepad op Windows
-& "C:\Program Files\MariaDB 11.x\bin\mariadb.exe" -u root -p
+# Standaard installatiepad op Windows (versienummer aanpassen aan jouw installatie)
+& "C:\Program Files\MariaDB 12.2\bin\mariadb.exe" -u root -p
 ```
 
 > Als `mariadb` in PATH staat (controleer na herstart van PowerShell):
@@ -119,15 +119,15 @@ Als je `MariaDB [engie_berichten]>` ziet, werkt de verbinding correct.
 
 ### Stap 5 — Schema-migratie (automatisch)
 
-Flyway maakt bij de **eerste start van de applicatie** automatisch alle tabellen aan via `V1__init_schema.sql`. Je hoeft zelf geen tabellen te maken.
+Hibernate maakt bij de **eerste start van de applicatie** automatisch alle tabellen aan via `ddl-auto=update`. Je hoeft zelf geen tabellen te maken.
+
+> **Let op:** Flyway is uitgeschakeld (`spring.flyway.enabled=false`) vanwege een bekende incompatibiliteit met MariaDB 12.x.
 
 Aangemaakte tabellen:
 
 | Tabel | Omschrijving |
-|-------|--------------|
-| `verzenders` | Bekende EAN-afzenders |
-| `ontvangers` | Bekende EAN-ontvangers |
-| `berichten` | Ontvangen berichten incl. XML payload |
+|-------|------|
+| `berichten` | Ontvangen berichten incl. XML payload en status |
 | `validatie_fouten` | Foutdetails per bericht |
 | `bericht_logs` | Audit trail van alle acties |
 
@@ -161,7 +161,7 @@ Pas deze aan als je een ander wachtwoord, hostnaam of poortnummer gebruikt.
 | `Access denied for user 'engie_user'` | Controleer wachtwoord en of `GRANT` correct is uitgevoerd |
 | `Can't connect to server` | MariaDB-service staat niet aan: `net start MariaDB` in PowerShell (als Admin) |
 | `Unknown database 'engie_berichten'` | Voer stap 3 opnieuw uit — database is niet aangemaakt |
-| `mariadb` niet herkend als commando | Voeg `C:\Program Files\MariaDB 11.x\bin` toe aan je PATH, of herstart PowerShell na installatie |
+| `mariadb` niet herkend als commando | Voeg `C:\Program Files\MariaDB 12.2\bin` toe aan je PATH (pas versienummer aan), of herstart PowerShell na installatie |
 
 ---
 
@@ -190,10 +190,10 @@ powershell -ExecutionPolicy Bypass -File ".\test.ps1"
 Verwacht resultaat:
 
 ```
-Tests run: 9  -- BerichtControllerTest        (alle geslaagd)
-Tests run: 13 -- BerichtServiceTest           (alle geslaagd)
+Tests run: 10 -- BerichtControllerTest        (alle geslaagd)
+Tests run: 16 -- BerichtServiceTest           (alle geslaagd)
 Tests run: 21 -- BerichtValidatieServiceTest  (alle geslaagd)
-Tests run: 43, Failures: 0, Errors: 0
+Tests run: 47, Failures: 0, Errors: 0
 BUILD SUCCESS
 ```
 
@@ -347,7 +347,7 @@ java-api/
     │   │   ├── ValidationFout.java                      ← Enkelvoudige validatiefout (code, type)
     │   │   └── ValidationResultaat.java                 ← Validatieresultaat (GOEDGEKEURD/BEVESTIGD/AFGEWEZEN)
     │   └── service/
-    │       ├── BerichtService.java                      ← In-memory opslag + ID-tracking
+    │       ├── BerichtService.java                      ← JPA-opslag (MariaDB/H2) + ID-tracking
     │       └── BerichtValidatieService.java             ← 15+ validatieregels per spec
     └── test/java/com/engie/api/
         ├── controller/
@@ -365,7 +365,7 @@ java-api/
 - **Java:** 21+ (getest op 25)
 - **Database:** MariaDB 10.6+ (productie) / H2 in-memory (tests)
 - **ORM:** Spring Data JPA + Hibernate
-- **Migraties:** Flyway (`V1__init_schema.sql`) — automatisch uitgevoerd bij opstarten
+- **Migraties:** Hibernate `ddl-auto=update` — tabellen worden automatisch aangemaakt/bijgewerkt (Flyway uitgeschakeld wegens MariaDB 12.x incompatibiliteit)
 - **Opslag:** Persistent in MariaDB — berichten, validatiefouten en auditlogs blijven bewaard
 - **Poort:** `8080`
 - **Testframework:** JUnit 5 + Mockito + MockMvc

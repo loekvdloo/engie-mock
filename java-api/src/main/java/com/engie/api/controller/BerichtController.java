@@ -37,6 +37,7 @@ public class BerichtController {
         ValidationResultaat validatie = validatieService.valideer(request);
 
         if (validatie.getStatus() == ValidationResultaat.Status.AFGEWEZEN) {
+            berichtService.ontvangBericht(request, validatie);
             OntvangstBevestiging afwijzing = OntvangstBevestiging.builder()
                     .status("AFGEWEZEN")
                     .ontvangstTijd(LocalDateTime.now())

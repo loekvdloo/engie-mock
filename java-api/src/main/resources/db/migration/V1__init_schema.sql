@@ -36,13 +36,7 @@ CREATE TABLE berichten (
     ontvangst_tijd       TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     aangemaakt_op        TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_berichten        PRIMARY KEY (id),
-    CONSTRAINT uq_bericht_msg_id   UNIQUE (message_id),
-    CONSTRAINT fk_bericht_verzender FOREIGN KEY (sender_ean)
-        REFERENCES verzenders (ean_code)
-        ON UPDATE CASCADE ON DELETE SET NULL,
-    CONSTRAINT fk_bericht_ontvanger FOREIGN KEY (receiver_ean)
-        REFERENCES ontvangers (ean_code)
-        ON UPDATE CASCADE ON DELETE SET NULL
+    CONSTRAINT uq_bericht_msg_id   UNIQUE (message_id)
 );
 
 -- ── Validatiefouten ───────────────────────────────────────────

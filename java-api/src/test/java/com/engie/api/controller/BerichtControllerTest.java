@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,7 +54,7 @@ class BerichtControllerTest {
                 .ontvangstTijd(LocalDateTime.now())
                 .toelichting("Bericht succesvol ontvangen en geregistreerd.")
                 .build();
-        when(berichtService.ontvangBericht(any())).thenReturn(bevestiging);
+        when(berichtService.ontvangBericht(any(), any())).thenReturn(bevestiging);
 
         mockMvc.perform(post("/api/berichten")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -79,7 +80,7 @@ class BerichtControllerTest {
                 .toelichting("Bericht ontvangen met technische opmerkingen. Zie validatie voor details.")
                 .validatie(bevestigd)
                 .build();
-        when(berichtService.ontvangBericht(any())).thenReturn(bevestiging);
+        when(berichtService.ontvangBericht(any(), any())).thenReturn(bevestiging);
 
         mockMvc.perform(post("/api/berichten")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -105,6 +106,22 @@ class BerichtControllerTest {
                 .andExpect(jsonPath("$.status").value("AFGEWEZEN"))
                 .andExpect(jsonPath("$.validatie.fouten[0].foutCode").value("650"))
                 .andExpect(jsonPath("$.validatie.fouten[0].foutType").value("SEMANTISCH"));
+    }
+
+    @Test
+    void postBericht_semantischeFout_slaaAfgewezenBerichtOpInService() throws Exception {
+        ValidationResultaat afgewezen = new ValidationResultaat();
+        afgewezen.setStatus(ValidationResultaat.Status.AFGEWEZEN);
+        afgewezen.voegFoutToe("650", "EAN-code ongeldig.", ValidationFout.FoutType.SEMANTISCH);
+        when(validatieService.valideer(any())).thenReturn(afgewezen);
+
+        mockMvc.perform(post("/api/berichten")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(geldigBerichtJson()))
+                .andExpect(status().isBadRequest());
+
+        // Verificeer dat AFGEWEZEN bericht wél wordt gepersisteerd
+        verify(berichtService).ontvangBericht(any(), any());
     }
 
     // ── GET /api/berichten ────────────────────────────────────────────────────

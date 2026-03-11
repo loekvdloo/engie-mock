@@ -19,6 +19,8 @@
 
     <properties>
         <java.version>21</java.version>
+        <!-- Flyway 11.x ondersteunt MariaDB 12.x (WSREP_ON fix) -->
+        <flyway.version>11.3.0</flyway.version>
     </properties>
 
     <dependencies>

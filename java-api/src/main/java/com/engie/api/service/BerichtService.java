@@ -13,6 +13,7 @@ import com.engie.api.repository.BerichtRepository;
 import com.engie.api.repository.ValidatieFoutRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +40,7 @@ public class BerichtService {
     private final Set<String> verwerkteAllocatieIds = ConcurrentHashMap.newKeySet();
 
     /** Constructor voor productie/Spring DI */
+    @Autowired
     public BerichtService(BerichtRepository berichtRepository,
                           ValidatieFoutRepository validatieFoutRepository,
                           BerichtLogRepository berichtLogRepository) {
@@ -76,7 +78,15 @@ public class BerichtService {
         entity.setCorrelationId(request.getCorrelationId());
         entity.setXmlPayload(request.getXmlPayload() != null ? request.getXmlPayload() : "");
         entity.setOntvangstTijd(nu);
-        entity.setStatus(validatie != null && validatie.heeftFouten() ? "BEVESTIGD" : "ONTVANGEN");
+        String status = "ONTVANGEN";
+        if (validatie != null && validatie.getStatus() != null) {
+            switch (validatie.getStatus()) {
+                case AFGEWEZEN  -> status = "AFGEWEZEN";
+                case BEVESTIGD  -> status = "BEVESTIGD";
+                default         -> status = "ONTVANGEN";
+            }
+        }
+        entity.setStatus(status);
 
         // Sla validatiefouten op
         if (validatie != null) {
@@ -92,7 +102,9 @@ public class BerichtService {
         }
 
         // Voeg log-entry toe
-        String actie = (validatie != null && validatie.heeftFouten()) ? "VALIDATIE_TECHNISCH" : "ONTVANGEN";
+        String actie = (validatie != null && validatie.getStatus() == ValidationResultaat.Status.AFGEWEZEN)
+                ? "VALIDATIE_AFGEWEZEN"
+                : (validatie != null && validatie.heeftFouten()) ? "VALIDATIE_TECHNISCH" : "ONTVANGEN";
         entity.getLogs().add(BerichtLogEntity.van(entity, actie,
                 "Bericht ontvangen van " + entity.getSenderEan()));
 
