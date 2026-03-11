@@ -3,22 +3,22 @@ package com.engie.api.service;
 import com.engie.api.model.Bericht;
 import com.engie.api.model.BerichtRequest;
 import com.engie.api.model.OntvangstBevestiging;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class BerichtServiceTest {
 
+    @Autowired
     private BerichtService service;
-
-    @BeforeEach
-    void setUp() {
-        service = new BerichtService();
-    }
 
     // ── ontvangBericht ────────────────────────────────────────────────────────
 

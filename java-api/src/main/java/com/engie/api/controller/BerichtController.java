@@ -47,7 +47,7 @@ public class BerichtController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(afwijzing);
         }
 
-        OntvangstBevestiging bevestiging = berichtService.ontvangBericht(request);
+        OntvangstBevestiging bevestiging = berichtService.ontvangBericht(request, validatie);
 
         if (validatie.heeftFouten()) {
             bevestiging.setToelichting("Bericht ontvangen met technische opmerkingen. Zie validatie voor details.");
