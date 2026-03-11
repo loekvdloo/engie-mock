@@ -1,0 +1,8 @@
+com\engie\api\controller\BerichtController.class
+com\engie\api\model\OntvangstBevestiging.class
+com\engie\api\model\BerichtRequest.class
+com\engie\api\service\BerichtService.class
+com\engie\api\model\OntvangstBevestiging$Builder.class
+com\engie\api\EngieBerichtApiApplication.class
+com\engie\api\model\Bericht$Builder.class
+com\engie\api\model\Bericht.class
